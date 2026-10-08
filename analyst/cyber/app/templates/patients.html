@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+	:root{--p-ink:#102a43;--p-muted:#627d98;--p-line:#d9e2ec;--p-blue:#075985;--p-teal:#0f766e;--p-canvas:#f3f8fb}
+	body:has(.patients-page){background:var(--p-canvas);color:var(--p-ink)}
+	body:has(.patients-page) header{height:76px;padding:0 clamp(20px,4vw,58px);border-bottom:1px solid #dce8ef;background:#fff;color:var(--p-ink);box-shadow:0 3px 16px #102a4310}
+	body:has(.patients-page) .brand{color:var(--p-ink);font-size:19px;letter-spacing:-.02em}
+	body:has(.patients-page) .brand span{color:var(--p-teal)}
+	body:has(.patients-page) nav a{color:#486581;font-size:12px;font-weight:700}
+	body:has(.patients-page) nav a:first-child{color:var(--p-blue)}
+	body:has(.patients-page) nav a:hover{color:var(--p-teal)}
+	main:has(.patients-page){max-width:1440px;margin:0 auto;padding:0 clamp(20px,4vw,58px) 52px}
+	.patients-page{animation:patient-rise 520ms ease both}
+	.patient-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;padding:47px 0 29px}
+	.patient-kicker{display:flex;align-items:center;gap:8px;margin-bottom:13px;color:var(--p-teal);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+	.patient-kicker:before{content:"";width:22px;height:2px;background:#47bca8}
+	.patient-hero h1{margin:0 0 8px;color:var(--p-ink);font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,4vw,48px);font-weight:400;letter-spacing:-.025em}
+	.patient-hero p{margin:0;color:var(--p-muted);font-size:14px}
+	.security-link,.add-patient{display:inline-flex;align-items:center;gap:9px;border-radius:7px;text-decoration:none;font-size:12px;font-weight:800}
+	.security-link{flex:0 0 auto;padding:11px 15px;border:1px solid #b9d9e7;background:#f8fcfe;color:var(--p-blue)}
+	.security-link:hover{border-color:var(--p-blue);background:#edf8fc}
+	.security-link svg{width:16px;height:16px}
+	.patient-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+	.patient-stat{display:flex;align-items:center;gap:14px;padding:17px 19px;border:1px solid #e0eaf0;border-radius:9px;background:#fff;box-shadow:0 5px 18px #102a430a}
+	.stat-icon{display:grid;width:39px;height:39px;place-items:center;border-radius:9px;background:#e8f5f5;color:var(--p-teal)}
+	.stat-icon.blue{background:#e8f3fa;color:var(--p-blue)}.stat-icon.gold{background:#fff5dd;color:#a15c08}.stat-icon svg{width:19px;height:19px}
+	.patient-stat small{display:block;margin-bottom:3px;color:var(--p-muted);font-size:11px;font-weight:700}.patient-stat strong{color:var(--p-ink);font-size:22px}
+	.records-panel{overflow:hidden;border:1px solid #e0eaf0;border-radius:10px;background:#fff;box-shadow:0 8px 25px #102a430d}
+	.records-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 20px;border-bottom:1px solid #e5edf2}
+	.records-title h2{margin:0 0 4px;color:var(--p-ink);font-size:17px}.records-title p{margin:0;color:var(--p-muted);font-size:12px}
+	.record-actions{display:flex;align-items:center;gap:10px}.search-form{display:flex;align-items:center;position:relative}.search-form svg{position:absolute;left:12px;color:#829ab1;pointer-events:none}
+	.search-form input{width:min(310px,30vw);height:39px;padding:0 12px 0 37px;border:1px solid var(--p-line);border-radius:6px 0 0 6px;outline:0;background:#fbfdfe;color:var(--p-ink);font:inherit;font-size:12px}
+	.search-form input:focus{border-color:#3a9bc2;box-shadow:0 0 0 3px #1677b81a}.search-form button{height:39px;padding:0 14px;border:0;border-radius:0 6px 6px 0;background:var(--p-blue);color:#fff;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+	.add-patient{height:39px;padding:0 13px;background:var(--p-teal);color:#fff;white-space:nowrap}.add-patient:hover{background:#0b5f59}.add-patient svg{width:15px;height:15px}
+	.table-scroll{overflow-x:auto}.patients-table{width:100%;min-width:800px;border-collapse:collapse}.patients-table th{padding:13px 20px;border-bottom:1px solid #e0eaf0;background:#f7fafc;color:#486581;font-size:10px;font-weight:800;letter-spacing:.09em;text-align:left;text-transform:uppercase;white-space:nowrap}
+	.patients-table td{padding:16px 20px;border-bottom:1px solid #edf2f5;color:#334e68;font-size:13px;vertical-align:middle}.patients-table tbody tr:hover{background:#f7fbfd}.patients-table tbody tr:last-child td{border-bottom:0}
+	.patient-id{color:var(--p-blue);font-size:12px;font-weight:800}.patient-name{color:var(--p-ink);font-weight:800}.diagnosis{display:inline-block;max-width:220px;overflow:hidden;color:#486581;text-overflow:ellipsis;vertical-align:bottom;white-space:nowrap}.date{color:#627d98;font-size:12px}
+	.actions{display:flex;align-items:center;gap:12px;white-space:nowrap}.actions a{color:var(--p-blue);font-size:12px;font-weight:800;text-decoration:none}.actions a:hover{color:var(--p-teal);text-decoration:underline}.actions .delete-button{padding:0;border:0;background:transparent;color:#b42318;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.actions .delete-button:hover{text-decoration:underline}
+	.empty-state{padding:48px 24px;color:var(--p-muted);text-align:center}.empty-state svg{margin-bottom:10px;color:#9fb3c8}.empty-state p{margin:0;font-size:13px}.empty-state strong{display:block;margin-bottom:5px;color:var(--p-ink);font-size:15px}
+	@keyframes patient-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+	@media(max-width:900px){body:has(.patients-page) header{height:auto;padding:16px 20px}body:has(.patients-page) header nav{gap:11px}.patient-hero{align-items:flex-start;flex-direction:column;padding-top:34px}.patient-stats{grid-template-columns:1fr}.records-toolbar{align-items:stretch;flex-direction:column}.record-actions{align-items:stretch;flex-direction:column}.search-form input{width:100%}}
+	@media(max-width:520px){.patient-hero h1{font-size:35px}.security-link{width:100%;justify-content:center}.record-actions,.search-form{width:100%}.add-patient{justify-content:center}}
+</style>
+<div class="patients-page">
+	<section class="patient-hero">
+		<div>
+			<div class="patient-kicker">Care records workspace</div>
+			<h1>Patient history</h1>
+			<p>Review clinical records with clarity and confidence.</p>
+		</div>
+		<a class="security-link" href="/security">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+			Open security dashboard
+		</a>
+	</section>
+
+	<section class="patient-stats" aria-label="Patient record summary">
+		<div class="patient-stat">
+			<span class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"/><circle cx="9.5" cy="7" r="3.5"/><path d="M16 11a3.5 3.5 0 1 0 0-7M17 14.5a4 4 0 0 1 4 4V20"/></svg></span>
+			<div><small>Total patients</small><strong>{{ patients|length }}</strong></div>
+		</div>
+		<div class="patient-stat">
+			<span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-3.5 7-9V5l-7-2-7 2v7c0 5.5 7 9 7 9Z"/><path d="M8.5 12h7M12 8.5v7"/></svg></span>
+			<div><small>Protected records</small><strong>{{ patients|length }}</strong></div>
+		</div>
+		<div class="patient-stat">
+			<span class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></span>
+			<div><small>Workspace status</small><strong>Active</strong></div>
+		</div>
+	</section>
+
+	<section class="records-panel">
+		<div class="records-toolbar">
+			<div class="records-title">
+				<h2>All patient records</h2>
+				<p>Search by patient name, ID, or diagnosis.</p>
+			</div>
+			<div class="record-actions">
+				<form class="search-form" method="get">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+					<input name="q" value="{{ q }}" placeholder="Search records" aria-label="Search patient records">
+					<button type="submit">Search</button>
+				</form>
+				<a class="add-patient" href="/patients/new">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+					Add patient
+				</a>
+			</div>
+		</div>
+
+		<div class="table-scroll">
+			{% if patients %}
+			<table class="patients-table">
+				<thead><tr><th>ID</th><th>Patient</th><th>Age</th><th>Diagnosis</th><th>Doctor</th><th>Last visit</th><th>Actions</th></tr></thead>
+	<tbody>
+	{% for p in patients %}
+	<tr>
+		  <td><span class="patient-id">{{ p.patient_id }}</span></td>
+		  <td><span class="patient-name">{{ p.name }}</span></td>
+		  <td>{{ p.age }}</td>
+		  <td><span class="diagnosis" title="{{ p.diagnosis }}">{{ p.diagnosis }}</span></td>
+		  <td>{{ p.doctor }}</td>
+		  <td><span class="date">{{ p.last_visit }}</span></td>
+					<td>
+						<div class="actions">
+							<a href="/patients/{{ p.id }}">View</a>
+							<a href="/patients/{{ p.id }}/edit">Modify</a>
+							<form class="inline" method="post" action="/patients/{{ p.id }}/delete"><button class="delete-button" type="submit">Delete</button></form>
+						</div>
+					</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<div class="empty-state">
+				<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5M8 10.8h5.5"/></svg>
+				<strong>No patient records found</strong>
+				<p>Try a different search or add a new patient record.</p>
+			</div>
+			{% endif %}
+		</div>
+	</section>
+{% endblock %}

@@ -1,0 +1,46 @@
+CYBERANALYST AI
+
+Healthcare Application
+        |
+        v
+Demo Simulator / Suricata
+        |
+        v
+     EVE JSON
+        |
+        v
+Event Normalization
+        |
+        +--------------------+
+        |                    |
+        v                    v
+Isolation Forest          XGBoost
+Anomaly Detection         Classification
+        |                    |
+        +---------+----------+
+                  |
+                  v
+          Incident Correlation
+                  |
+                  v
+             Risk Engine
+                  |
+                  v
+            MITRE ATT&CK
+                  |
+                  v
+              Gemini AI
+                  |
+        +---------+---------+
+        |                   |
+        v                   v
+   SOC Dashboard       Gmail Alert
+        |
+        v
+ Human Analyst
+        |
+        v
+Approve / Edit / Close
+        |
+        v
+     Audit Log

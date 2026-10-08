@@ -1,0 +1,56 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<style>
+  :root{--e-ink:#102a43;--e-muted:#627d98;--e-line:#d9e2ec;--e-blue:#075985;--e-teal:#0f766e;--e-canvas:#f3f8fb}
+  body:has(.events-page){background:var(--e-canvas);color:var(--e-ink)}
+  body:has(.events-page) header{height:76px;padding:0 clamp(20px,4vw,58px);border-bottom:1px solid #dce8ef;background:#fff;color:var(--e-ink);box-shadow:0 3px 16px #102a4310}
+  body:has(.events-page) .brand{color:var(--e-ink);font-size:19px;letter-spacing:-.02em}body:has(.events-page) .brand span{color:var(--e-teal)}
+  body:has(.events-page) nav a{color:#486581;font-size:12px;font-weight:700}body:has(.events-page) nav a:nth-child(4){color:var(--e-blue)}body:has(.events-page) nav a:hover{color:var(--e-teal)}
+  main:has(.events-page){max-width:1440px;margin:0 auto;padding:0 clamp(20px,4vw,58px) 52px}.events-page{animation:events-rise 520ms ease both}
+  .events-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;padding:47px 0 29px}.events-kicker{display:flex;align-items:center;gap:8px;margin-bottom:13px;color:var(--e-teal);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.events-kicker:before{content:"";width:22px;height:2px;background:#47bca8}
+  .events-hero h1{margin:0 0 8px;color:var(--e-ink);font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,4vw,48px);font-weight:400;letter-spacing:-.025em}.events-hero p{margin:0;color:var(--e-muted);font-size:14px}
+  .live-badge{display:inline-flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid #cce9e2;border-radius:7px;background:#f1fbf8;color:#17665b;font-size:12px;font-weight:800}.live-dot{width:8px;height:8px;border-radius:50%;background:#1eaa79;box-shadow:0 0 0 4px #1eaa7921}.live-badge.unavailable{border-color:#f4c7c3;background:#fff7f6;color:#a33a32}.live-badge.unavailable .live-dot{background:#d64545;box-shadow:0 0 0 4px #d6454521}
+  .events-panel{overflow:hidden;border:1px solid #e0eaf0;border-radius:10px;background:#fff;box-shadow:0 8px 25px #102a430d}.events-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 20px;border-bottom:1px solid #e5edf2}.events-toolbar h2{margin:0 0 4px;color:var(--e-ink);font-size:17px}.events-toolbar p{margin:0;color:var(--e-muted);font-size:12px}.refresh-note{display:inline-flex;align-items:center;gap:7px;color:var(--e-muted);font-size:11px}.refresh-note svg{width:15px;height:15px;color:var(--e-teal)}
+  .table-scroll{overflow-x:auto}.events-table{width:100%;min-width:900px;border-collapse:collapse}.events-table th{padding:13px 20px;border-bottom:1px solid #e0eaf0;background:#f7fafc;color:#486581;font-size:10px;font-weight:800;letter-spacing:.09em;text-align:left;text-transform:uppercase;white-space:nowrap}.events-table td{padding:15px 20px;border-bottom:1px solid #edf2f5;color:#334e68;font-size:12px;vertical-align:middle}.events-table tbody tr:hover{background:#f7fbfd}.events-table tbody tr:last-child td{border-bottom:0}.event-time{color:#627d98;font-family:Consolas,"Courier New",monospace;font-size:11px;white-space:nowrap}.endpoint{color:var(--e-ink);font-family:Consolas,"Courier New",monospace;font-size:11px;white-space:nowrap}.event-signature{max-width:330px;color:var(--e-ink);font-weight:700}.protocol{display:inline-flex;padding:5px 8px;border-radius:5px;background:#e8f3fa;color:var(--e-blue);font-size:10px;font-weight:800;text-transform:uppercase}.event-severity{display:inline-flex;padding:5px 9px;border-radius:99px;background:#fff5dd;color:#a15c08;font-size:11px;font-weight:800}.event-severity.high,.event-severity.critical{background:#fff0ee;color:#b42318}.event-severity.low,.event-severity.info{background:#e8f5f5;color:var(--e-teal)}
+  .empty-events{padding:56px 24px;color:var(--e-muted);text-align:center}.empty-events svg{margin-bottom:10px;color:#9fb3c8}.empty-events strong{display:block;margin-bottom:5px;color:var(--e-ink);font-size:15px}.empty-events p{margin:0;font-size:13px}
+  @keyframes events-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:900px){body:has(.events-page) header{height:auto;padding:16px 20px}body:has(.events-page) header nav{gap:11px}.events-hero{align-items:flex-start;flex-direction:column;padding-top:34px}.live-badge{width:100%;justify-content:center}.events-toolbar{align-items:flex-start;flex-direction:column}}
+  @media(max-width:520px){.events-hero h1{font-size:35px}}
+</style>
+
+<div class="events-page">
+  <section class="events-hero">
+    <div>
+      <div class="events-kicker">Security telemetry stream</div>
+      <h1>Live security events</h1>
+      <p>Recent normalized telemetry from Demo or Suricata mode.</p>
+    </div>
+    <div class="live-badge" id="liveBadge"><span class="live-dot"></span><span id="status">Connecting...</span></div>
+  </section>
+
+  <section class="events-panel">
+    <div class="events-toolbar"><div><h2>Event stream</h2><p>Incoming signals are refreshed automatically every three seconds.</p></div><div class="refresh-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 11a8 8 0 0 0-14.7-4L4 9"/><path d="M4 4v5h5M4 13a8 8 0 0 0 14.7 4L20 15"/><path d="M20 20v-5h-5"/></svg>Auto-refresh enabled</div></div>
+    <div class="table-scroll">
+      <table class="events-table">
+        <thead><tr><th>Time</th><th>Source</th><th>Destination</th><th>Protocol</th><th>Event signature</th><th>Severity</th></tr></thead>
+        <tbody id="eventsBody"><tr><td colspan="6"><div class="empty-events"><strong>Connecting to event stream</strong><p>Waiting for normalized telemetry.</p></div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+async function refreshEvents(){
+  const badge=document.getElementById('liveBadge');
+  try{
+    const response=await fetch('/api/live-events');
+    if(!response.ok)throw new Error('Live event request failed');
+    const d=await response.json();
+    const events=d.events||[];
+    document.getElementById('eventsBody').innerHTML=events.map(e=>{const severity=String(e.severity??'');return `<tr><td><span class="event-time">${e.timestamp||'-'}</span></td><td><span class="endpoint">${e.src_ip||'-'}:${e.src_port||''}</span></td><td><span class="endpoint">${e.dest_ip||'-'}:${e.dest_port||''}</span></td><td><span class="protocol">${e.proto||'-'}</span></td><td><span class="event-signature">${e.signature||'-'}</span></td><td><span class="event-severity ${severity.toLowerCase()}">${severity||'-'}</span></td></tr>`}).join('')||'<tr><td colspan="6"><div class="empty-events"><strong>No events yet</strong><p>Use Attack Simulator to generate controlled telemetry.</p></div></td></tr>';
+    document.getElementById('status').textContent='Live';badge.classList.remove('unavailable');
+  }catch(e){document.getElementById('status').textContent='Unavailable';badge.classList.add('unavailable')}
+}
+refreshEvents();setInterval(refreshEvents,3000);
+</script>
+{% endblock %}

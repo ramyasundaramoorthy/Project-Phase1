@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  :root{--i-ink:#102a43;--i-muted:#627d98;--i-line:#d9e2ec;--i-blue:#075985;--i-teal:#0f766e;--i-canvas:#f3f8fb}
+  body:has(.incidents-page){background:var(--i-canvas);color:var(--i-ink)}
+  body:has(.incidents-page) header{height:76px;padding:0 clamp(20px,4vw,58px);border-bottom:1px solid #dce8ef;background:#fff;color:var(--i-ink);box-shadow:0 3px 16px #102a4310}
+  body:has(.incidents-page) .brand{color:var(--i-ink);font-size:19px;letter-spacing:-.02em}body:has(.incidents-page) .brand span{color:var(--i-teal)}
+  body:has(.incidents-page) nav a{color:#486581;font-size:12px;font-weight:700}body:has(.incidents-page) nav a:nth-child(3){color:var(--i-blue)}body:has(.incidents-page) nav a:hover{color:var(--i-teal)}
+  main:has(.incidents-page){max-width:1440px;margin:0 auto;padding:0 clamp(20px,4vw,58px) 52px}.incidents-page{animation:incident-rise 520ms ease both}
+  .incident-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;padding:47px 0 29px}.incident-kicker{display:flex;align-items:center;gap:8px;margin-bottom:13px;color:var(--i-teal);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.incident-kicker:before{content:"";width:22px;height:2px;background:#47bca8}
+  .incident-hero h1{margin:0 0 8px;color:var(--i-ink);font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,4vw,48px);font-weight:400;letter-spacing:-.025em}.incident-hero p{margin:0;color:var(--i-muted);font-size:14px}
+  .monitor-badge{display:inline-flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid #cce9e2;border-radius:7px;background:#f1fbf8;color:#17665b;font-size:12px;font-weight:800}.monitor-dot{width:8px;height:8px;border-radius:50%;background:#1eaa79;box-shadow:0 0 0 4px #1eaa7921}
+  .incident-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}.incident-stat{display:flex;align-items:center;gap:14px;padding:17px 19px;border:1px solid #e0eaf0;border-radius:9px;background:#fff;box-shadow:0 5px 18px #102a430a}.stat-icon{display:grid;width:39px;height:39px;place-items:center;border-radius:9px;background:#e8f3fa;color:var(--i-blue)}.stat-icon.teal{background:#e8f5f5;color:var(--i-teal)}.stat-icon.gold{background:#fff5dd;color:#a15c08}.stat-icon.red{background:#fff0ee;color:#b42318}.stat-icon svg{width:19px;height:19px}.incident-stat small{display:block;margin-bottom:3px;color:var(--i-muted);font-size:11px;font-weight:700}.incident-stat strong{color:var(--i-ink);font-size:22px}
+  .incident-panel{overflow:hidden;border:1px solid #e0eaf0;border-radius:10px;background:#fff;box-shadow:0 8px 25px #102a430d}.panel-heading{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #e5edf2}.panel-heading h2{margin:0;color:var(--i-ink);font-size:17px}.panel-heading p{margin:4px 0 0;color:var(--i-muted);font-size:12px}
+  .table-scroll{overflow-x:auto}.incidents-table{width:100%;min-width:900px;border-collapse:collapse}.incidents-table th{padding:13px 20px;border-bottom:1px solid #e0eaf0;background:#f7fafc;color:#486581;font-size:10px;font-weight:800;letter-spacing:.09em;text-align:left;text-transform:uppercase;white-space:nowrap}.incidents-table td{padding:16px 20px;border-bottom:1px solid #edf2f5;color:#334e68;font-size:13px;vertical-align:middle}.incidents-table tbody tr:hover{background:#f7fbfd}.incidents-table tbody tr:last-child td{border-bottom:0}
+  .incident-id{color:var(--i-blue);font-size:12px;font-weight:800;text-decoration:none}.incident-id:hover{color:var(--i-teal);text-decoration:underline}.threat-name{color:var(--i-ink);font-weight:800}.source-ip,.mitre-id{color:#486581;font-family:Consolas,"Courier New",monospace;font-size:12px}.mitre-id{color:var(--i-blue);font-weight:700}.risk-score{font-size:16px;font-weight:800}.risk-high{color:#b42318}.risk-medium{color:#a15c08}.risk-low{color:var(--i-teal)}
+  .open-link{display:inline-flex;align-items:center;padding:6px 10px;border:1px solid #b9d9e7;border-radius:5px;background:#f8fcfe;color:var(--i-blue);font-size:11px;font-weight:800;text-decoration:none;white-space:nowrap}.open-link:hover{border-color:var(--i-blue);background:#edf8fc;color:var(--i-blue)}
+  .severity,.status{display:inline-flex;align-items:center;padding:5px 9px;border-radius:99px;font-size:11px;font-weight:800}.severity{background:#fff5dd;color:#a15c08}.severity.high,.severity.critical{background:#fff0ee;color:#b42318}.severity.low{background:#e8f5f5;color:var(--i-teal)}.status{background:#e8f3fa;color:var(--i-blue)}.status.approved{background:#e8f5f5;color:var(--i-teal)}.status.closed{background:#edf2f5;color:#627d98}
+  .empty-state{padding:52px 24px;color:var(--i-muted);text-align:center}.empty-state svg{margin-bottom:10px;color:#9fb3c8}.empty-state strong{display:block;margin-bottom:5px;color:var(--i-ink);font-size:15px}.empty-state p{margin:0;font-size:13px}
+  @keyframes incident-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:900px){body:has(.incidents-page) header{height:auto;padding:16px 20px}body:has(.incidents-page) header nav{gap:11px}.incident-hero{align-items:flex-start;flex-direction:column;padding-top:34px}.monitor-badge{width:100%;justify-content:center}.incident-stats{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.incident-stats{grid-template-columns:1fr}.incident-hero h1{font-size:35px}}
+</style>
+
+<div class="incidents-page">
+  <section class="incident-hero">
+    <div>
+      <div class="incident-kicker">Security operations centre</div>
+     <h1>Incident command</h1>
+      <p>Review, prioritise, and investigate signals affecting patient services.</p>
+    </div>
+    <div class="monitor-badge"><span class="monitor-dot"></span> Monitoring systems online</div>
+  </section>
+
+  <section class="incident-stats" aria-label="Incident summary">
+    <div class="incident-stat"><span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3Z"/><path d="M12 8v4M12 16h.01"/></svg></span><div><small>Total incidents</small><strong>{{ incidents|length }}</strong></div></div>
+    <div class="incident-stat"><span class="stat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 3.5 18h17L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg></span><div><small>High-risk signals</small><strong>{{ incidents|selectattr('risk_score','ge',70)|list|length }}</strong></div></div>
+    <div class="incident-stat"><span class="stat-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="m8 12 2.5 2.5L16 9"/></svg></span><div><small>Open cases</small><strong>{{ incidents|selectattr('status','equalto','Open')|list|length }}</strong></div></div>
+    <div class="incident-stat"><span class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></span><div><small>Latest review</small><strong>Live</strong></div></div>
+  </section>
+
+  <section class="incident-panel">
+    <div class="panel-heading"><div><h2>Incident queue</h2><p>Correlated security events requiring analyst attention.</p></div></div>
+    <div class="table-scroll">
+      {% if incidents %}
+      <table class="incidents-table">
+        <thead><tr><th>Incident</th><th>Threat signal</th><th>Risk score</th><th>Severity</th><th>Source IP</th><th>MITRE mapping</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for i in incidents %}
+        <tr>
+          <td><a class="incident-id" href="/security/incidents/{{ i.id }}">INC-{{ "%04d"|format(i.id) }}</a></td>
+          <td><span class="threat-name">{{ i.threat }}</span></td>
+          <td><span class="risk-score {% if i.risk_score >= 70 %}risk-high{% elif i.risk_score >= 40 %}risk-medium{% else %}risk-low{% endif %}">{{ i.risk_score }}</span><span style="color:#829ab1;font-size:11px"> / 100</span></td>
+          <td><span class="severity {{ (i.severity or '')|lower }}">{{ i.severity }}</span></td>
+          <td><span class="source-ip">{{ i.source_ip }}</span></td>
+          <td><span class="mitre-id">{{ i.mitre_id }}</span></td>
+          <td>{% if i.approved %}<span class="status approved" aria-label="Approved"><span aria-hidden="true">✓</span> Approved</span>{% else %}<span class="status {{ (i.status or '')|lower }}">{{ i.status }}</span>{% endif %}</td>
+          <td><a class="open-link" href="/security/incidents/{{ i.id }}">Open</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 3.5 18h17L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg><strong>No incidents recorded</strong><p>New correlated security signals will appear here.</p></div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

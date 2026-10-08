@@ -1,0 +1,31 @@
+{
+  "feature_names": [
+    "src_port",
+    "dest_port",
+    "severity",
+    "is_alert",
+    "signature_length",
+    "is_http",
+    "request_rate",
+    "failed_login_count",
+    "byte_count",
+    "flow_duration_ms"
+  ],
+  "classes": [
+    "Normal",
+    "Brute Force",
+    "Port Scan",
+    "SQL Injection",
+    "Unauthorized Access",
+    "Privilege Escalation",
+    "Data Exfiltration"
+  ],
+  "training_rows": 2450,
+  "test_rows": 490,
+  "accuracy": 0.9061224489795918,
+  "weighted_precision": 0.9067460317460319,
+  "weighted_recall": 0.9061224489795918,
+  "weighted_f1": 0.9064024434376041,
+  "training_source": "controlled synthetic network/healthcare telemetry",
+  "note": "Replace/add public network datasets after label mapping; do not describe synthetic data as real-world measured performance."
+}

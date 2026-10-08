@@ -1,0 +1,83 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<style>
+  :root{--s-ink:#102a43;--s-muted:#627d98;--s-line:#d9e2ec;--s-blue:#075985;--s-teal:#0f766e;--s-canvas:#f3f8fb}
+  body:has(.security-page){background:var(--s-canvas);color:var(--s-ink)}
+  body:has(.security-page) header{height:76px;padding:0 clamp(20px,4vw,58px);border-bottom:1px solid #dce8ef;background:#fff;color:var(--s-ink);box-shadow:0 3px 16px #102a4310}
+  body:has(.security-page) .brand{color:var(--s-ink);font-size:19px;letter-spacing:-.02em}body:has(.security-page) .brand span{color:var(--s-teal)}
+  body:has(.security-page) nav a{color:#486581;font-size:12px;font-weight:700}body:has(.security-page) nav a:nth-child(2){color:var(--s-blue)}body:has(.security-page) nav a:hover{color:var(--s-teal)}
+  main:has(.security-page){max-width:1440px;margin:0 auto;padding:0 clamp(20px,4vw,58px) 52px}.security-page{animation:security-rise 520ms ease both}
+  .security-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;padding:47px 0 29px}.security-kicker{display:flex;align-items:center;gap:8px;margin-bottom:13px;color:var(--s-teal);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.security-kicker:before{content:"";width:22px;height:2px;background:#47bca8}
+  .security-hero h1{margin:0 0 8px;color:var(--s-ink);font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,4vw,48px);font-weight:400;letter-spacing:-.025em}.security-hero p{margin:0;color:var(--s-muted);font-size:14px}
+  .system-status{display:inline-flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid #cce9e2;border-radius:7px;background:#f1fbf8;color:#17665b;font-size:12px;font-weight:800}.status-dot{width:8px;height:8px;border-radius:50%;background:#1eaa79;box-shadow:0 0 0 4px #1eaa7921}
+  .status-copy{color:#627d98;font-weight:600}
+  .security-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}.security-stat{padding:18px 19px;border:1px solid #e0eaf0;border-radius:9px;background:#fff;box-shadow:0 5px 18px #102a430a}.security-stat small{display:block;margin-bottom:8px;color:var(--s-muted);font-size:11px;font-weight:700}.security-stat strong{color:var(--s-ink);font-size:27px;font-weight:700}.security-stat.risk strong{color:#b42318}.security-stat.open strong{color:var(--s-teal)}
+  .security-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.security-panel{border:1px solid #e0eaf0;border-radius:10px;background:#fff;box-shadow:0 8px 25px #102a430d}.security-panel h2{margin:0;padding:19px 20px 7px;color:var(--s-ink);font-size:17px}.security-panel>p.panel-subtitle{margin:0;padding:0 20px 18px;color:var(--s-muted);font-size:12px}
+  .pipeline-wrap{padding:18px 20px 22px}.pipeline{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:3px 0 9px}.pipeline-step{position:relative;min-width:120px;padding:13px 12px;border:1px solid #bfdae7;background:#f2f9fc;color:var(--s-blue);font-size:11px;font-weight:800;line-height:1.35;text-align:center}.pipeline-step:first-child{border-radius:7px 0 0 7px}.pipeline-step:last-child{border-radius:0 7px 7px 0}.pipeline-step:not(:last-child):after{content:">";position:absolute;right:-7px;top:50%;z-index:2;transform:translateY(-50%);color:#58a1bc;font-size:15px;font-weight:900}.pipeline-step:not(:last-child){margin-right:6px}.pipeline-step span{display:block;margin-bottom:5px;color:var(--s-teal);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+  .sensor-list{display:grid;gap:0;margin:0 20px 20px;border-top:1px solid #edf2f5}.sensor-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid #edf2f5;color:#486581;font-size:13px}.sensor-row strong{color:var(--s-ink);font-size:12px}.sensor-ok{display:inline-flex;align-items:center;gap:6px;color:var(--s-teal);font-weight:800;font-size:12px}.sensor-ok:before{content:"";width:7px;height:7px;border-radius:50%;background:#1eaa79}
+  .tool-links{display:flex;gap:10px;padding:0 20px 20px}.tool-link{display:inline-flex;align-items:center;gap:7px;padding:10px 12px;border:1px solid #b9d9e7;border-radius:6px;background:#f8fcfe;color:var(--s-blue);font-size:12px;font-weight:800;text-decoration:none}.tool-link:hover{border-color:var(--s-blue);background:#edf8fc}.tool-link svg{width:15px;height:15px}
+  .event-feed{max-height:365px;overflow:auto;padding:0 20px}.event{padding:14px 0;border-bottom:1px solid #edf2f5;color:#334e68;font-size:13px;line-height:1.45}.event:last-child{border-bottom:0}.event b{color:var(--s-ink);font-size:12px}.event small{color:var(--s-muted);font-size:11px}.event:before{content:"";display:inline-block;width:7px;height:7px;margin:0 8px 1px 0;border-radius:50%;background:#4aaac1}.no-events{padding:34px 0;color:var(--s-muted);font-size:13px;text-align:center}
+  @keyframes security-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:1050px){.security-stats{grid-template-columns:repeat(3,1fr)}.security-grid{grid-template-columns:1fr}}
+  @media(max-width:900px){body:has(.security-page) header{height:auto;padding:16px 20px}body:has(.security-page) header nav{gap:11px}.security-hero{align-items:flex-start;flex-direction:column;padding-top:34px}.system-status{width:100%;justify-content:center}}
+  @media(max-width:560px){.security-stats{grid-template-columns:repeat(2,1fr)}.security-stat:last-child{grid-column:span 2}.security-hero h1{font-size:35px}}
+</style>
+
+<div class="security-page">
+  <section class="security-hero">
+    <div>
+      <div class="security-kicker">Clinical security operations</div>
+      <h1>Security command centre</h1>
+      <p>AI-assisted monitoring for resilient patient services and accountable response.</p>
+    </div>
+    <div class="system-status"><span class="status-dot"></span><span id="sensorMode">SENSOR</span><span class="status-copy" id="sensorDescription">Loading...</span></div>
+  </section>
+
+  <section class="security-stats" aria-label="Security metrics">
+    <div class="security-stat"><small>Total events</small><strong id="events">0</strong></div>
+    <div class="security-stat"><small>Anomalies detected</small><strong id="anomalies">0</strong></div>
+    <div class="security-stat"><small>Incidents</small><strong id="incidents">0</strong></div>
+    <div class="security-stat risk"><small>High risk</small><strong id="high_risk">0</strong></div>
+    <div class="security-stat open"><small>Open cases</small><strong id="open_incidents">0</strong></div>
+  </section>
+
+  <div class="security-grid">
+    <section class="security-panel">
+      <h2>Security pipeline</h2>
+      <p class="panel-subtitle">From telemetry to a human-reviewed response.</p>
+      <div class="pipeline-wrap"><div class="pipeline" aria-label="Security processing pipeline">
+        <div class="pipeline-step"><span>01</span>Telemetry</div><div class="pipeline-step"><span>02</span>Event adapter</div><div class="pipeline-step"><span>03</span>Rules + ML</div><div class="pipeline-step"><span>04</span>Correlation</div><div class="pipeline-step"><span>05</span>MITRE + risk</div><div class="pipeline-step"><span>06</span>Analyst review</div>
+      </div></div>
+      <h2>Sensor health</h2>
+      <p class="panel-subtitle">Connected services supporting the current workspace.</p>
+      <div class="sensor-list">
+        <div class="sensor-row"><span>Suricata integration</span><span class="sensor-ok">Simulator connected</span></div>
+        <div class="sensor-row"><span>ML engine</span><strong>Isolation Forest + classifier</strong></div>
+        <div class="sensor-row"><span>Event database</span><strong>SQLite</strong></div>
+        <div class="sensor-row"><span>AI investigation</span><strong>Gemini integration</strong></div>
+      </div>
+      <div class="tool-links"><a class="tool-link" href="/security/events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>Live events</a><a class="tool-link" href="/security/suricata"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3Z"/><path d="M8 12h8"/></svg>Detection sensor</a></div>
+    </section>
+
+    <section class="security-panel">
+      <h2>Recent events</h2>
+      <p class="panel-subtitle">Latest normalized signals from the monitoring pipeline.</p>
+      <div class="event-feed" id="recent"><div class="no-events">Loading recent events...</div></div>
+    </section>
+  </div>
+</div>
+
+<script>
+async function refresh(){
+  try{
+    const [r,sr]=await Promise.all([fetch('/api/stats'),fetch('/api/detection-status')]);
+    const d=await r.json();const sensor=await sr.json();
+    document.getElementById('sensorMode').textContent=(sensor.mode||'demo').toUpperCase();
+    document.getElementById('sensorDescription').textContent=sensor.exists?'EVE JSON available':'EVE JSON not found';
+    for(const k of ['events','anomalies','incidents','high_risk','open_incidents'])document.getElementById(k).textContent=d[k];
+    document.getElementById('recent').innerHTML=d.recent.map(x=>`<div class="event"><b>${x.predicted_class||'Normal'}</b> Â· ${x.src_ip||''}<br><small>${x.timestamp||''} Â· confidence ${x.ml_confidence||0}</small></div>`).join('')||'<div class="no-events">No events yet. Use Attack Simulator.</div>';
+  }catch(e){document.getElementById('sensorDescription').textContent='Unavailable';document.getElementById('recent').innerHTML='<div class="no-events">Unable to load recent events.</div>'}
+}
+refresh();setInterval(refresh,2000);
+</script>
+{% endblock %}

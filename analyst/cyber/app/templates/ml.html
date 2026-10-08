@@ -1,0 +1,60 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<style>
+  :root{--m-ink:#102a43;--m-muted:#627d98;--m-line:#d9e2ec;--m-blue:#075985;--m-teal:#0f766e;--m-canvas:#f3f8fb}
+  body:has(.ml-page){background:var(--m-canvas);color:var(--m-ink)}
+  body:has(.ml-page) header{height:76px;padding:0 clamp(20px,4vw,58px);border-bottom:1px solid #dce8ef;background:#fff;color:var(--m-ink);box-shadow:0 3px 16px #102a4310}
+  body:has(.ml-page) .brand{color:var(--m-ink);font-size:19px;letter-spacing:-.02em}body:has(.ml-page) .brand span{color:var(--m-teal)}
+  body:has(.ml-page) nav a{color:#486581;font-size:12px;font-weight:700}body:has(.ml-page) nav a:nth-child(5){color:var(--m-blue)}body:has(.ml-page) nav a:hover{color:var(--m-teal)}
+  main:has(.ml-page){max-width:1440px;margin:0 auto;padding:0 clamp(20px,4vw,58px) 52px}.ml-page{animation:ml-rise 520ms ease both}
+  .ml-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;padding:47px 0 29px}.ml-kicker{display:flex;align-items:center;gap:8px;margin-bottom:13px;color:var(--m-teal);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.ml-kicker:before{content:"";width:22px;height:2px;background:#47bca8}
+  .ml-hero h1{margin:0 0 8px;color:var(--m-ink);font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,4vw,48px);font-weight:400;letter-spacing:-.025em}.ml-hero p{margin:0;color:var(--m-muted);font-size:14px}
+  .model-badge{display:inline-flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid #cce9e2;border-radius:7px;background:#f1fbf8;color:#17665b;font-size:12px;font-weight:800}.model-dot{width:8px;height:8px;border-radius:50%;background:#1eaa79;box-shadow:0 0 0 4px #1eaa7921}.model-badge.untrained{border-color:#f4c7c3;background:#fff7f6;color:#a33a32}.model-badge.untrained .model-dot{background:#d64545;box-shadow:0 0 0 4px #d6454521}
+  .ml-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}.ml-metric{padding:18px 19px;border:1px solid #e0eaf0;border-radius:9px;background:#fff;box-shadow:0 5px 18px #102a430a}.ml-metric small{display:block;margin-bottom:8px;color:var(--m-muted);font-size:11px;font-weight:700}.ml-metric strong{color:var(--m-ink);font-size:25px;font-weight:700}.ml-metric.accuracy strong{color:var(--m-blue)}.ml-metric.f1 strong{color:var(--m-teal)}
+  .ml-panel{overflow:hidden;margin-bottom:18px;border:1px solid #e0eaf0;border-radius:10px;background:#fff;box-shadow:0 8px 25px #102a430d}.panel-heading{padding:18px 20px;border-bottom:1px solid #e5edf2}.panel-heading h2{margin:0 0 4px;color:var(--m-ink);font-size:17px}.panel-heading p{margin:0;color:var(--m-muted);font-size:12px}.evaluation-body{display:grid;grid-template-columns:1fr 1.2fr;gap:22px;padding:20px}.warning{min-height:44px;padding:12px 14px;border-left:3px solid #d9901a;background:#fff9eb;color:#8a5a08;font-size:12px;line-height:1.5}.warning:empty{display:none}.report-wrap{overflow:auto;max-height:250px;border:1px solid #e3ebf0;border-radius:7px;background:#f7fafc}.report-wrap pre{margin:0;padding:16px;color:#334e68;font-family:Consolas,"Courier New",monospace;font-size:11px;line-height:1.6;white-space:pre-wrap}
+  .table-scroll{overflow-x:auto}.predictions-table{width:100%;min-width:900px;border-collapse:collapse}.predictions-table th{padding:13px 20px;border-bottom:1px solid #e0eaf0;background:#f7fafc;color:#486581;font-size:10px;font-weight:800;letter-spacing:.09em;text-align:left;text-transform:uppercase;white-space:nowrap}.predictions-table td{padding:15px 20px;border-bottom:1px solid #edf2f5;color:#334e68;font-size:12px;vertical-align:middle}.predictions-table tbody tr:hover{background:#f7fbfd}.predictions-table tbody tr:last-child td{border-bottom:0}.ml-time,.ml-source{color:#627d98;font-family:Consolas,"Courier New",monospace;font-size:11px;white-space:nowrap}.ml-signature{max-width:330px;color:var(--m-ink);font-weight:700}.prediction,.anomaly{display:inline-flex;padding:5px 9px;border-radius:99px;background:#e8f3fa;color:var(--m-blue);font-size:11px;font-weight:800}.anomaly{background:#fff0ee;color:#b42318}.confidence{color:var(--m-teal);font-weight:800}
+  .empty-ml{padding:44px 24px;color:var(--m-muted);text-align:center}.empty-ml strong{display:block;margin-bottom:5px;color:var(--m-ink);font-size:15px}.empty-ml p{margin:0;font-size:13px}
+  @keyframes ml-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:950px){.ml-metrics{grid-template-columns:repeat(2,1fr)}.evaluation-body{grid-template-columns:1fr}}
+  @media(max-width:900px){body:has(.ml-page) header{height:auto;padding:16px 20px}body:has(.ml-page) header nav{gap:11px}.ml-hero{align-items:flex-start;flex-direction:column;padding-top:34px}.model-badge{width:100%;justify-content:center}}
+  @media(max-width:520px){.ml-metrics{grid-template-columns:1fr}.ml-hero h1{font-size:35px}}
+</style>
+
+<div class="ml-page">
+  <section class="ml-hero">
+    <div><div class="ml-kicker">Clinical intelligence layer</div><h1>ML analysis</h1><p>Model status, live predictions, and evaluation evidence for analyst review.</p></div>
+    <div class="model-badge" id="modelBadge"><span class="model-dot"></span><span id="modelStatus">Loading model...</span></div>
+  </section>
+
+  <section class="ml-metrics" aria-label="Model metrics">
+    <div class="ml-metric accuracy"><small>XGBoost accuracy</small><strong id="accuracy">-</strong></div>
+    <div class="ml-metric f1"><small>Weighted F1 score</small><strong id="f1">-</strong></div>
+    <div class="ml-metric"><small>Isolation Forest F1</small><strong id="isoF1">-</strong></div>
+    <div class="ml-metric"><small>Predictions in view</small><strong>{{ events|length }}</strong></div>
+  </section>
+
+  <section class="ml-panel">
+    <div class="panel-heading"><h2>Evaluation evidence</h2><p>Validation output from the trained healthcare security models.</p></div>
+    <div class="evaluation-body"><div><p class="warning" id="warning"></p><p style="margin:16px 0 0;color:#627d98;font-size:12px;line-height:1.6">Metrics are presented as controlled evaluation evidence to support analyst interpretation, not as a substitute for clinical or production security judgement.</p></div><div class="report-wrap"><pre id="report">Loading evaluation report...</pre></div></div>
+  </section>
+
+  <section class="ml-panel">
+    <div class="panel-heading"><h2>Recent model predictions</h2><p>Event classifications and anomaly signals from the current workspace.</p></div>
+    <div class="table-scroll">
+      {% if events %}
+      <table class="predictions-table"><thead><tr><th>Time</th><th>Source</th><th>Signature</th><th>Anomaly</th><th>Prediction</th><th>Confidence</th></tr></thead><tbody>
+      {% for e in events %}<tr><td><span class="ml-time">{{ e.timestamp }}</span></td><td><span class="ml-source">{{ e.src_ip }}</span></td><td><span class="ml-signature">{{ e.signature }}</span></td><td><span class="anomaly">{{ e.anomaly_label }}</span></td><td><span class="prediction">{{ e.predicted_class }}</span></td><td><span class="confidence">{{ e.ml_confidence }}</span></td></tr>{% endfor %}
+      </tbody></table>
+      {% else %}<div class="empty-ml"><strong>No model predictions yet</strong><p>Run the simulator or ingest telemetry to populate this view.</p></div>{% endif %}
+    </div>
+  </section>
+</div>
+
+<script>
+Promise.all([fetch('/api/ml-metadata').then(r=>r.json()),fetch('/api/ml-evaluation').then(r=>r.json())]).then(([meta,ev])=>{
+  const trained=Boolean(meta.trained);const badge=document.getElementById('modelBadge');
+  document.getElementById('modelStatus').textContent=trained?'Model trained':'Model not trained';if(!trained)badge.classList.add('untrained');
+  if(ev.available){document.getElementById('accuracy').textContent=(ev.xgboost.accuracy*100).toFixed(1)+'%';document.getElementById('f1').textContent=ev.xgboost.weighted_f1.toFixed(3);document.getElementById('isoF1').textContent=ev.isolation_forest.binary_normal_vs_anomaly_f1.toFixed(3);document.getElementById('warning').textContent=ev.warning;document.getElementById('report').textContent=JSON.stringify(ev.xgboost.classification_report,null,2)}else{document.getElementById('report').textContent=ev.message}
+}).catch(()=>{document.getElementById('modelStatus').textContent='Model unavailable';document.getElementById('modelBadge').classList.add('untrained');document.getElementById('report').textContent='Evaluation service unavailable.'});
+</script>
+{% endblock %}

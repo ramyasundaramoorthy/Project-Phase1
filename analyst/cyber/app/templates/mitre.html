@@ -1,0 +1,43 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<style>
+  :root{--t-ink:#102a43;--t-muted:#627d98;--t-line:#d9e2ec;--t-blue:#075985;--t-teal:#0f766e;--t-canvas:#f3f8fb}
+  body:has(.mitre-page){background:var(--t-canvas);color:var(--t-ink)}
+  body:has(.mitre-page) header{height:76px;padding:0 clamp(20px,4vw,58px);border-bottom:1px solid #dce8ef;background:#fff;color:var(--t-ink);box-shadow:0 3px 16px #102a4310}
+  body:has(.mitre-page) .brand{color:var(--t-ink);font-size:19px;letter-spacing:-.02em}body:has(.mitre-page) .brand span{color:var(--t-teal)}
+  body:has(.mitre-page) nav a{color:#486581;font-size:12px;font-weight:700}body:has(.mitre-page) nav a:nth-child(6){color:var(--t-blue)}body:has(.mitre-page) nav a:hover{color:var(--t-teal)}
+  main:has(.mitre-page){max-width:1440px;margin:0 auto;padding:0 clamp(20px,4vw,58px) 52px}.mitre-page{animation:mitre-rise 520ms ease both}
+  .mitre-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;padding:47px 0 29px}.mitre-kicker{display:flex;align-items:center;gap:8px;margin-bottom:13px;color:var(--t-teal);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.mitre-kicker:before{content:"";width:22px;height:2px;background:#47bca8}
+  .mitre-hero h1{margin:0 0 8px;color:var(--t-ink);font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,4vw,48px);font-weight:400;letter-spacing:-.025em}.mitre-hero p{margin:0;color:var(--t-muted);font-size:14px}
+  .framework-badge{display:inline-flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid #b9d9e7;border-radius:7px;background:#f8fcfe;color:var(--t-blue);font-size:12px;font-weight:800;text-decoration:none}.framework-badge:hover{border-color:var(--t-blue);background:#edf8fc}.framework-badge svg{width:16px;height:16px}
+  .mitre-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}.mitre-stat{display:flex;align-items:center;gap:14px;padding:17px 19px;border:1px solid #e0eaf0;border-radius:9px;background:#fff;box-shadow:0 5px 18px #102a430a}.stat-icon{display:grid;width:39px;height:39px;place-items:center;border-radius:9px;background:#e8f3fa;color:var(--t-blue)}.stat-icon.teal{background:#e8f5f5;color:var(--t-teal)}.stat-icon.gold{background:#fff5dd;color:#a15c08}.stat-icon svg{width:19px;height:19px}.mitre-stat small{display:block;margin-bottom:3px;color:var(--t-muted);font-size:11px;font-weight:700}.mitre-stat strong{color:var(--t-ink);font-size:22px}
+  .mapping-panel{overflow:hidden;border:1px solid #e0eaf0;border-radius:10px;background:#fff;box-shadow:0 8px 25px #102a430d}.mapping-heading{padding:18px 20px;border-bottom:1px solid #e5edf2}.mapping-heading h2{margin:0 0 4px;color:var(--t-ink);font-size:17px}.mapping-heading p{margin:0;color:var(--t-muted);font-size:12px}.table-scroll{overflow-x:auto}.mitre-table{width:100%;min-width:850px;border-collapse:collapse}.mitre-table th{padding:13px 20px;border-bottom:1px solid #e0eaf0;background:#f7fafc;color:#486581;font-size:10px;font-weight:800;letter-spacing:.09em;text-align:left;text-transform:uppercase;white-space:nowrap}.mitre-table td{padding:17px 20px;border-bottom:1px solid #edf2f5;color:#334e68;font-size:13px;vertical-align:top}.mitre-table tbody tr:hover{background:#f7fbfd}.mitre-table tbody tr:last-child td{border-bottom:0}.incident-id{color:var(--t-blue);font-size:12px;font-weight:800;white-space:nowrap}.threat{color:var(--t-ink);font-weight:800}.technique{display:inline-flex;align-items:center;gap:7px;color:var(--t-blue);font-size:12px;font-weight:800}.technique-code{padding:5px 8px;border-radius:5px;background:#e8f3fa;font-family:Consolas,"Courier New",monospace;font-size:11px}.reason{max-width:480px;color:#486581;line-height:1.55}.empty-mitre{padding:54px 24px;color:var(--t-muted);text-align:center}.empty-mitre svg{margin-bottom:10px;color:#9fb3c8}.empty-mitre strong{display:block;margin-bottom:5px;color:var(--t-ink);font-size:15px}.empty-mitre p{margin:0;font-size:13px}
+  @keyframes mitre-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:900px){body:has(.mitre-page) header{height:auto;padding:16px 20px}body:has(.mitre-page) header nav{gap:11px}.mitre-hero{align-items:flex-start;flex-direction:column;padding-top:34px}.framework-badge{width:100%;justify-content:center}}
+  @media(max-width:520px){.mitre-stats{grid-template-columns:1fr}.mitre-hero h1{font-size:35px}}
+</style>
+
+<div class="mitre-page">
+  <section class="mitre-hero">
+    <div><div class="mitre-kicker">Threat intelligence framework</div><h1>MITRE ATT&CK mapping</h1><p>Connect observed healthcare security signals to recognised adversary techniques.</p></div>
+    <a class="framework-badge" href="/security/coverage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg> ATT&CK coverage register</a>
+  </section>
+
+  <section class="mitre-stats" aria-label="MITRE summary">
+    <div class="mitre-stat"><span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg></span><div><small>Mapped incidents</small><strong>{{ incidents|length }}</strong></div></div>
+    <div class="mitre-stat"><span class="stat-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="m8 12 2.5 2.5L16 9"/></svg></span><div><small>Technique evidence</small><strong>{{ incidents|length }}</strong></div></div>
+    <div class="mitre-stat"><span class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 3.5 18h17L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg></span><div><small>Analyst context</small><strong>Ready</strong></div></div>
+  </section>
+
+  <section class="mapping-panel">
+    <div class="mapping-heading"><h2>Technique mapping register</h2><p>Evidence-backed mappings generated from correlated incident context.</p></div>
+    <div class="table-scroll">
+      {% if incidents %}
+      <table class="mitre-table"><thead><tr><th>Incident</th><th>Threat signal</th><th>Technique</th><th>Mapping rationale</th></tr></thead><tbody>
+      {% for i in incidents %}<tr><td><span class="incident-id">INC-{{ "%04d"|format(i.id) }}</span></td><td><span class="threat">{{ i.threat }}</span></td><td><span class="technique"><span class="technique-code">{{ i.mitre_id }}</span>{{ i.mitre_name }}</span></td><td><span class="reason">{{ i.mapping_reason }}</span></td></tr>{% endfor %}
+      </tbody></table>
+      {% else %}<div class="empty-mitre"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 3.5 18h17L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg><strong>No technique mappings yet</strong><p>Run a controlled security simulation to create ATT&CK evidence.</p></div>{% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

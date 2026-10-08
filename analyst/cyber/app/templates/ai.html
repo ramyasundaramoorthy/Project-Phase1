@@ -1,0 +1,41 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<style>
+  :root{--a-ink:#102a43;--a-muted:#627d98;--a-line:#d9e2ec;--a-blue:#075985;--a-teal:#0f766e;--a-canvas:#f3f8fb}
+  body:has(.ai-page){background:var(--a-canvas);color:var(--a-ink)}
+  body:has(.ai-page) header{height:76px;padding:0 clamp(20px,4vw,58px);border-bottom:1px solid #dce8ef;background:#fff;color:var(--a-ink);box-shadow:0 3px 16px #102a4310}
+  body:has(.ai-page) .brand{color:var(--a-ink);font-size:19px;letter-spacing:-.02em}body:has(.ai-page) .brand span{color:var(--a-teal)}
+  body:has(.ai-page) nav a{color:#486581;font-size:12px;font-weight:700}body:has(.ai-page) nav a:nth-child(7){color:var(--a-blue)}body:has(.ai-page) nav a:hover{color:var(--a-teal)}
+  main:has(.ai-page){max-width:1440px;margin:0 auto;padding:0 clamp(20px,4vw,58px) 52px}.ai-page{animation:ai-rise 520ms ease both}
+  .ai-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;padding:47px 0 29px}.ai-kicker{display:flex;align-items:center;gap:8px;margin-bottom:13px;color:var(--a-teal);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.ai-kicker:before{content:"";width:22px;height:2px;background:#47bca8}
+  .ai-hero h1{margin:0 0 8px;color:var(--a-ink);font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,4vw,48px);font-weight:400;letter-spacing:-.025em}.ai-hero p{margin:0;color:var(--a-muted);font-size:14px}
+  .ai-badge{display:inline-flex;align-items:center;gap:9px;padding:11px 15px;border:1px solid #cce9e2;border-radius:7px;background:#f1fbf8;color:#17665b;font-size:12px;font-weight:800}.ai-dot{width:8px;height:8px;border-radius:50%;background:#1eaa79;box-shadow:0 0 0 4px #1eaa7921}
+  .ai-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}.ai-stat{display:flex;align-items:center;gap:14px;padding:17px 19px;border:1px solid #e0eaf0;border-radius:9px;background:#fff;box-shadow:0 5px 18px #102a430a}.stat-icon{display:grid;width:39px;height:39px;place-items:center;border-radius:9px;background:#e8f3fa;color:var(--a-blue)}.stat-icon.teal{background:#e8f5f5;color:var(--a-teal)}.stat-icon.gold{background:#fff5dd;color:#a15c08}.stat-icon svg{width:19px;height:19px}.ai-stat small{display:block;margin-bottom:3px;color:var(--a-muted);font-size:11px;font-weight:700}.ai-stat strong{color:var(--a-ink);font-size:22px}
+  .investigation-card{overflow:hidden;margin-bottom:18px;border:1px solid #e0eaf0;border-radius:10px;background:#fff;box-shadow:0 8px 25px #102a430d}.investigation-header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 20px;border-bottom:1px solid #e5edf2}.investigation-header h2{margin:0 0 5px;color:var(--a-ink);font-size:17px}.investigation-header p{margin:0;color:var(--a-muted);font-size:12px}.risk-badge{display:inline-flex;align-items:center;padding:6px 10px;border-radius:99px;background:#fff5dd;color:#a15c08;font-size:11px;font-weight:800;white-space:nowrap}.risk-high{background:#fff0ee;color:#b42318}.risk-low{background:#e8f5f5;color:var(--a-teal)}
+  .investigation-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}.evidence-block{padding:20px;border-bottom:1px solid #edf2f5}.evidence-block:nth-child(odd){border-right:1px solid #edf2f5}.evidence-block h3{display:flex;align-items:center;gap:8px;margin:0 0 11px;color:var(--a-ink);font-size:13px}.evidence-block h3:before{content:"";width:4px;height:15px;border-radius:2px;background:var(--a-teal)}.evidence-block p{margin:0;color:#486581;font-size:13px;line-height:1.7;white-space:pre-line}.recommendations{grid-column:1 / -1;padding:20px;background:#f7fbfd}.recommendations h3:before{background:#d9901a}.recommendation-text{padding:14px 16px;border-left:3px solid #d9901a;border-radius:0 6px 6px 0;background:#fff9eb;color:#6f4b12;font-size:13px;line-height:1.7;white-space:pre-line}
+  .mitre-context{display:flex;align-items:center;gap:12px;padding:16px 20px;background:#f8fcfe;color:#486581;font-size:12px}.mitre-code{padding:6px 9px;border-radius:5px;background:#e8f3fa;color:var(--a-blue);font-family:Consolas,"Courier New",monospace;font-weight:800}.mitre-context strong{color:var(--a-ink);font-size:12px}
+  .empty-ai{padding:54px 24px;border:1px solid #e0eaf0;border-radius:10px;background:#fff;color:var(--a-muted);text-align:center;box-shadow:0 8px 25px #102a430d}.empty-ai svg{margin-bottom:10px;color:#9fb3c8}.empty-ai strong{display:block;margin-bottom:5px;color:var(--a-ink);font-size:15px}.empty-ai p{margin:0;font-size:13px}
+  @keyframes ai-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:800px){body:has(.ai-page) header{height:auto;padding:16px 20px}body:has(.ai-page) header nav{gap:11px}.ai-hero{align-items:flex-start;flex-direction:column;padding-top:34px}.ai-badge{width:100%;justify-content:center}.investigation-grid{grid-template-columns:1fr}.evidence-block:nth-child(odd){border-right:0}.recommendations{grid-column:auto}}
+  @media(max-width:520px){.ai-stats{grid-template-columns:1fr}.ai-hero h1{font-size:35px}.investigation-header{align-items:flex-start;flex-direction:column}}
+</style>
+
+<div class="ai-page">
+  <section class="ai-hero"><div><div class="ai-kicker">Assisted analyst workflow</div><h1>AI investigation</h1><p>Structured intelligence to help security teams understand and respond to incidents.</p></div><div class="ai-badge"><span class="ai-dot"></span> Investigation service ready</div></section>
+  <section class="ai-stats" aria-label="Investigation summary"><div class="ai-stat"><span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg></span><div><small>Investigations</small><strong>{{ incidents|length }}</strong></div></div><div class="ai-stat"><span class="stat-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="m8 12 2.5 2.5L16 9"/></svg></span><div><small>Context enriched</small><strong>{{ incidents|length }}</strong></div></div><div class="ai-stat"><span class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 3.5 18h17L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg></span><div><small>Analyst review</small><strong>Required</strong></div></div></section>
+
+  {% for i in incidents %}
+  <article class="investigation-card">
+    <header class="investigation-header"><div><h2>INC-{{ "%04d"|format(i.id) }} - {{ i.threat }}</h2><p>Generated investigation brief from correlated incident evidence.</p></div><span class="risk-badge {% if i.risk_score >= 70 %}risk-high{% elif i.risk_score < 40 %}risk-low{% endif %}">Risk {{ i.risk_score }}/100</span></header>
+    <div class="investigation-grid">
+      <section class="evidence-block"><h3>Executive summary</h3><p>{{ i.ai_summary }}</p></section>
+      <section class="evidence-block"><h3>Investigation findings</h3><p>{{ i.ai_findings }}</p></section>
+      <section class="evidence-block recommendations"><h3>Recommended actions</h3><div class="recommendation-text">{{ (i.ai_recommendations or 'No recommendations available.')|replace('\n', '\n') }}</div></section>
+    </div>
+    <div class="mitre-context"><span class="mitre-code">{{ i.mitre_id }}</span><span><strong>{{ i.mitre_name }}</strong><br>Mapped technique for this incident context.</span></div>
+  </article>
+  {% else %}
+  <div class="empty-ai"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><path d="M8 12h8M12 8v8"/></svg><strong>No investigations yet</strong><p>Run a controlled simulation first to generate an AI investigation brief.</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ title or "CyberAnalyst AI" }}</title><link rel="stylesheet" href="{{ url_for('static',filename='css/app.css') }}">
+<style>
+	:root{--shell-ink:#102a43;--shell-muted:#486581;--shell-blue:#075985;--shell-teal:#0f766e;--shell-line:#dce8ef}
+	*{box-sizing:border-box}
+	body{font-family:"Trebuchet MS",Arial,sans-serif;color:var(--shell-ink);background:#f3f8fb}
+	header{position:relative;z-index:10;display:flex;align-items:center;min-height:76px;padding:0 clamp(20px,4vw,58px);gap:30px;border-bottom:1px solid var(--shell-line);background:#fff;color:var(--shell-ink);box-shadow:0 3px 16px #102a4310}
+	.brand{color:var(--shell-ink);font-size:19px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}.brand span{color:var(--shell-teal);font-weight:700}
+	nav{display:flex;align-items:center;gap:15px;flex-wrap:wrap}nav a{color:var(--shell-muted);font-size:12px;font-weight:700;text-decoration:none;transition:color 160ms ease}nav a:hover{color:var(--shell-teal)}nav a:last-child{margin-left:auto;color:#a33a32}
+	main{min-height:calc(100vh - 76px)}
+	button,a,input,textarea{font-family:inherit}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #53b7c8;outline-offset:2px}
+	@media(max-width:900px){header{align-items:flex-start;flex-direction:column;gap:14px;padding:16px 20px}nav{gap:11px}nav a:last-child{margin-left:0}main{min-height:calc(100vh - 132px)}}
+</style></head>
+<body>
+{% if session.get('admin') %}
+<header><div class="brand">CyberAnalyst <span>AI</span></div>
+<nav aria-label="Primary navigation"><a href="/patients">Patients</a><a href="/security">SOC Dashboard</a><a href="/security/incidents">Incidents</a><a href="/security/events">Live Events</a><a href="/security/ml">ML</a><a href="/security/mitre">MITRE</a><a href="/security/ai">AI Investigation</a><a href="/security/audit">Audit</a><a href="/security/simulator">Simulator</a><a href="/logout">Logout</a></nav></header>
+{% endif %}
+<main>{% block content %}{% endblock %}</main>
+</body></html>

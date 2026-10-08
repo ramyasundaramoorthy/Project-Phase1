@@ -1,0 +1,412 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+	:root {
+		--ink: #102a43;
+		--muted: #627d98;
+		--line: #d9e2ec;
+		--blue: #1677b8;
+		--blue-dark: #075985;
+		--teal: #0f766e;
+		--canvas: #f3f8fb;
+		--white: #ffffff;
+	}
+
+	main:has(.login-page) {
+		max-width: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	body:has(.login-page) {
+		background: var(--canvas);
+		color: var(--ink);
+	}
+
+	.login-page {
+		min-height: 100vh;
+		display: grid;
+		grid-template-columns: minmax(360px, 0.88fr) minmax(480px, 1.12fr);
+		background: var(--canvas);
+		overflow: hidden;
+	}
+
+	.login-visual {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		min-height: 700px;
+		padding: clamp(34px, 5vw, 76px);
+		color: #f8fcff;
+		background: linear-gradient(145deg, #073b5c 0%, #0b627c 58%, #0d827e 100%);
+		isolation: isolate;
+	}
+
+	.login-visual::before,
+	.login-visual::after {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		border: 1px solid rgba(219, 246, 255, 0.16);
+		border-radius: 50%;
+	}
+
+	.login-visual::before {
+		width: 520px;
+		height: 520px;
+		right: -255px;
+		top: -150px;
+	}
+
+	.login-visual::after {
+		width: 760px;
+		height: 760px;
+		right: -460px;
+		bottom: -350px;
+	}
+
+	.brand-lockup,
+	.trust-note,
+	.login-content {
+		animation: rise-in 650ms ease both;
+	}
+
+	.brand-lockup {
+		display: flex;
+		align-items: center;
+		gap: 13px;
+		font-size: 16px;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+	}
+
+	.brand-mark {
+		display: grid;
+		width: 44px;
+		height: 44px;
+		place-items: center;
+		border: 1px solid rgba(255, 255, 255, 0.42);
+		border-radius: 12px;
+		background: rgba(255, 255, 255, 0.13);
+		box-shadow: 0 8px 22px rgba(0, 32, 52, 0.16);
+	}
+
+	.brand-mark svg { width: 25px; height: 25px; }
+
+	.visual-copy {
+		max-width: 530px;
+		margin: auto 0;
+		padding: 62px 0;
+	}
+
+	.eyebrow {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 21px;
+		color: #bfe8ee;
+		font-size: 11px;
+		font-weight: 800;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.eyebrow::before {
+		content: "";
+		width: 25px;
+		height: 2px;
+		background: #55d6c4;
+	}
+
+	.visual-copy h1 {
+		max-width: 520px;
+		margin: 0;
+		color: #fff;
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: clamp(38px, 4.2vw, 62px);
+		font-weight: 400;
+		line-height: 1.06;
+		letter-spacing: -0.025em;
+	}
+
+	.visual-copy p {
+		max-width: 430px;
+		margin: 25px 0 0;
+		color: #d5edf2;
+		font-size: 16px;
+		line-height: 1.75;
+	}
+
+	.trust-note {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		max-width: 430px;
+		color: #cae9ed;
+		font-size: 12px;
+		line-height: 1.5;
+	}
+
+	.trust-note svg { flex: 0 0 auto; color: #75e0c7; }
+
+	.login-panel {
+		display: grid;
+		place-items: center;
+		padding: 42px clamp(24px, 6vw, 100px);
+		background: #fbfdfe;
+	}
+
+	.login-content {
+		width: min(100%, 430px);
+		animation-delay: 100ms;
+	}
+
+	.panel-heading { margin-bottom: 30px; }
+
+	.panel-heading h2 {
+		margin: 0 0 9px;
+		color: var(--ink);
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 35px;
+		font-weight: 400;
+		letter-spacing: -0.02em;
+	}
+
+	.panel-heading p { margin: 0; color: var(--muted); font-size: 14px; }
+
+	.environment {
+		display: flex;
+		align-items: center;
+		gap: 9px;
+		margin-bottom: 27px;
+		padding: 11px 13px;
+		border: 1px solid #cce9e2;
+		border-radius: 7px;
+		background: #f1fbf8;
+		color: #17665b;
+		font-size: 12px;
+		font-weight: 700;
+	}
+
+	.pulse {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: #1eaa79;
+		box-shadow: 0 0 0 4px rgba(30, 170, 121, 0.13);
+	}
+
+	.login-form { display: grid; gap: 19px; }
+	.field { display: grid; gap: 8px; }
+	.field label { color: #334e68; font-size: 13px; font-weight: 700; }
+	.input-wrap { position: relative; }
+	.input-wrap svg { position: absolute; left: 14px; top: 14px; color: #829ab1; pointer-events: none; }
+	.input-wrap input {
+		width: 100%;
+		height: 49px;
+		margin: 0;
+		padding: 0 45px;
+		border: 1px solid var(--line);
+		border-radius: 7px;
+		outline: none;
+		background: #fff;
+		color: var(--ink);
+		font: inherit;
+		font-size: 14px;
+		transition: border-color 160ms ease, box-shadow 160ms ease;
+	}
+
+	.input-wrap input:focus {
+		border-color: var(--blue);
+		box-shadow: 0 0 0 3px rgba(22, 119, 184, 0.13);
+	}
+
+	.input-wrap input::placeholder { color: #9fb3c8; }
+
+	.password-toggle {
+		position: absolute;
+		right: 7px;
+		top: 6px;
+		display: grid;
+		width: 37px;
+		height: 37px;
+		place-items: center;
+		padding: 0;
+		border: 0;
+		border-radius: 5px;
+		background: transparent;
+		color: #627d98;
+	}
+
+	.password-toggle:hover { background: #eef6fa; color: var(--blue-dark); }
+	.form-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: -2px; }
+	.check-label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; cursor: pointer; }
+	.check-label input { width: 15px; height: 15px; accent-color: var(--blue); }
+	.help-link { color: var(--blue-dark); font-size: 12px; font-weight: 700; text-decoration: none; }
+	.help-link:hover { text-decoration: underline; }
+
+	.login-submit {
+		display: flex;
+		width: 100%;
+		height: 50px;
+		align-items: center;
+		justify-content: center;
+		gap: 9px;
+		margin-top: 4px;
+		border: 0;
+		border-radius: 7px;
+		background: var(--blue-dark);
+		box-shadow: 0 7px 16px rgba(7, 89, 133, 0.18);
+		color: #fff;
+		font: inherit;
+		font-size: 14px;
+		font-weight: 800;
+		cursor: pointer;
+		transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+	}
+
+	.login-submit:hover { background: #064b70; box-shadow: 0 9px 20px rgba(7, 89, 133, 0.24); transform: translateY(-1px); }
+	.login-submit:active { transform: translateY(0); }
+	.login-submit:disabled { cursor: wait; opacity: 0.8; }
+	.login-submit .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin 700ms linear infinite; }
+	.login-submit.is-loading .spinner { display: block; }
+	.login-submit.is-loading .arrow { display: none; }
+
+	.error-message {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		margin-bottom: 20px;
+		padding: 12px 13px;
+		border: 1px solid #f4c7c3;
+		border-radius: 7px;
+		background: #fff7f6;
+		color: #a33a32;
+		font-size: 13px;
+		line-height: 1.4;
+	}
+
+	.security-footer { display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 34px; color: #829ab1; font-size: 11px; }
+	.security-footer svg { color: var(--teal); }
+
+	@keyframes rise-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+	@keyframes spin { to { transform: rotate(360deg); } }
+
+	@media (max-width: 820px) {
+		.login-page { display: block; }
+		.login-visual { min-height: 285px; padding: 27px 24px; }
+		.visual-copy { padding: 38px 0 18px; }
+		.visual-copy h1 { font-size: 38px; }
+		.visual-copy p { margin-top: 13px; font-size: 13px; line-height: 1.5; }
+		.trust-note { display: none; }
+		.login-panel { min-height: calc(100vh - 285px); padding: 42px 24px 55px; }
+	}
+
+	@media (max-width: 420px) {
+		.form-row { align-items: flex-start; flex-direction: column; }
+		.login-panel { padding-inline: 20px; }
+	}
+</style>
+
+<div class="login-page">
+	<section class="login-visual" aria-label="CyberAnalyst AI overview">
+		<div class="brand-lockup">
+			<span class="brand-mark" aria-hidden="true">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3Z"/><path d="M12 7v7M8.5 10.5h7"/></svg>
+			</span>
+			<span>CyberAnalyst <strong>AI</strong></span>
+		</div>
+
+		<div class="visual-copy">
+			<span class="eyebrow">Clinical security operations</span>
+			<h1>Protecting care, one signal at a time.</h1>
+			<p>A focused command centre for healthcare teams to understand risk, investigate incidents, and keep patient services resilient.</p>
+		</div>
+
+		<div class="trust-note">
+			<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 19 6v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+			<span>Built for accountable, privacy-conscious healthcare security teams.</span>
+		</div>
+	</section>
+
+	<section class="login-panel">
+		<div class="login-content">
+			<div class="panel-heading">
+				<h2>Welcome back</h2>
+				<p>Sign in to access your security workspace.</p>
+			</div>
+
+			<div class="environment" role="status">
+				<span class="pulse" aria-hidden="true"></span>
+				Secure project lab environment online
+			</div>
+
+			{% if error %}
+			<div class="error-message" role="alert">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+				<span>{{ error }}</span>
+			</div>
+			{% endif %}
+
+			<form class="login-form" method="post" id="login-form">
+				<div class="field">
+					<label for="username">Administrator ID</label>
+					<div class="input-wrap">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-3.3 3.1-5 7-5s6.3 1.7 7 5"/></svg>
+						<input id="username" name="username" type="text" autocomplete="username" placeholder="Enter your administrator ID" required autofocus>
+					</div>
+				</div>
+
+				<div class="field">
+					<label for="password">Password</label>
+					<div class="input-wrap">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+						<input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+						<button class="password-toggle" type="button" id="password-toggle" aria-label="Show password" title="Show password">
+							<svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"/><circle cx="12" cy="12" r="2"/></svg>
+						</button>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<label class="check-label"><input type="checkbox" name="remember_device"> Remember this device</label>
+					<a class="help-link" href="mailto:security@cyberanalyst.local">Need access help?</a>
+				</div>
+
+				<button class="login-submit" type="submit" id="login-submit">
+					<span>Sign in securely</span>
+					<svg class="arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+					<span class="spinner" aria-hidden="true"></span>
+				</button>
+			</form>
+
+			<div class="security-footer">
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 19 6v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3Z"/></svg>
+				<span>Protected access · Authorized personnel only</span>
+			</div>
+		</div>
+	</section>
+</div>
+
+<script>
+	(function () {
+		const password = document.getElementById('password');
+		const toggle = document.getElementById('password-toggle');
+		const form = document.getElementById('login-form');
+		const submit = document.getElementById('login-submit');
+
+		toggle.addEventListener('click', function () {
+			const isHidden = password.type === 'password';
+			password.type = isHidden ? 'text' : 'password';
+			toggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+			toggle.setAttribute('title', isHidden ? 'Hide password' : 'Show password');
+		});
+
+		form.addEventListener('submit', function () {
+			submit.disabled = true;
+			submit.classList.add('is-loading');
+		});
+	}());
+</script>
+{% endblock %}
